@@ -32,11 +32,36 @@ class Graph {
 	}
 
 	//basic insert  funtion
-	bool insert( Type from, pair<Type,int> to) {
+	//explicit is true, the path is craeted even if the nodes dont exist
+	//default is false, so nodes are created and then path is made
+	bool insert( Type from, pair<Type,int> to, bool explicit=false) {
+			//add nodes to the list of nodes
+		if ( !explicit ) {		
+			nodes[from] = true;
+			nodes[to.first] = true;
+		} else {
+			//if any of the node doesnt exist return false
+			if ( nodes.find(from) == nodes.end() || nodes.find(to.first) == nodes.end() )
+				return false;
+		}
+
+		//for directed
 		edges[from].insert(to);
+        
+        //undirected
         if(!directed)
             edges[to.first].insert(make_pair(from,to.second));
+		
+		//return true if no new nodes have been made
+        return true;  
 	}
+
+	//it will be usefull to create single node islands
+	void add_node( Type node_name) {
+		node[node_name] = false;
+	}
+
+	//to visit all nodes
 
 	//just for printing output
     template <class type>
