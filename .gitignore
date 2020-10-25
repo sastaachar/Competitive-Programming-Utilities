@@ -1,0 +1,11 @@
+#currently working
+/ActiveProblems
+
+#inputs
+*.txt
+
+#the compiled bianry executables
+*/a
+
+#vscode stuff
+.vscode/*
