@@ -10,39 +10,36 @@
 #define vvi vector<vi>
 #define vl vector<ll>
 #define vvl vector<vl>
+#define fs first
+#define ss second
 // clang-format off
 #define vin(arr,n) ff(n){int x; cin>>x; arr.pb(x);}
 #define vln(arr,n) ff(n){ll x; cin>>x; arr.pb(x);}
+#define pv(arr) fr(arr.size(),i){cout<<arr[i]<<" ";}cout<<"\n";
 // clang-format on
 #define top front
 const int maxn = (int)(2e5 + 5);
 const ll mod = (ll)(1e9 + 7);
 using namespace std;
 
-// random number generators
-vi get_n_random(int n, int r = 10e5, int l = 0) {
-    vi randomNumbers;
-    ff(n) randomNumbers.pb(rand() % r + l);
-    return randomNumbers;
-}
-int get_1_random(int r = 10e9, int l = 0) {
-    return rand() % r + l;
-}
-string get_1_random_string(int len = 20) {
-    string s = "";
-    ff(len) {
-        s += (char)('a' + get_1_random() % 26);
-    }
-    return s;
-}
+void solve() {
+    int n, m, k;
+    cin >> n >> m >> k;
 
-int my_ciel(int a, int b) {
-    return (a+b-1)/b;
+    vector<pii> points;
+    ff(k) {
+        pii lol;
+        cin >> lol.fs >> lol.ss;
+    }
 }
 
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    cout << "This is util file";
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
     return 0;
 }

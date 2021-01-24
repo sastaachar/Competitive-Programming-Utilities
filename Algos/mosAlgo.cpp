@@ -57,7 +57,7 @@ int main() {
     //    SQRT_N = sqrt(n);
     vector<qry> qrys;
     fr(qsize, i) {
-        qry tmp;
+    	qry tmp;
         cin >> tmp.L >> tmp.R;
         tmp.L--;
         tmp.R--;
