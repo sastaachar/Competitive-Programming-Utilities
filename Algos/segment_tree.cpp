@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// ! USE GLOBAL VARIABLES TO AVOID TLE
+
 /*
     * size of a segmenttree can be taken as 4n
     //// https://www.quora.com/Why-does-4-*-N-space-have-to-be-allocated-for-a-segment-tree-where-N-is-the-size-of-the-original-array

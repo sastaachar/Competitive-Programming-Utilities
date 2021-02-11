@@ -39,6 +39,7 @@ string get_1_random_string(int len = 20) {
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
+    srand(time(0));
     cout << "This is util file";
     return 0;
 }
