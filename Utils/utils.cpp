@@ -36,6 +36,10 @@ string get_1_random_string(int len = 20) {
     return s;
 }
 
+long long my_ceil(long long a, long long b) {
+    return (a + b - 1) / b;
+}
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
