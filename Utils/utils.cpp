@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define fr(siz, i) for (int i = 0; i < siz; i++)
-#define frr(siz, i, a) for (int i = a; i < siz; i++)
+#define frr(a, siz, i) for (int i = a; i < siz; i++)
 #define ff(siz) for (int sasta = 0; sasta < siz; sasta++)
 #define ll long long
 #define pb push_back
@@ -14,7 +14,6 @@
 #define vin(arr,n) ff(n){int x; cin>>x; arr.pb(x);}
 #define vln(arr,n) ff(n){ll x; cin>>x; arr.pb(x);}
 // clang-format on
-#define top front
 const int maxn = (int)(2e5 + 5);
 const ll mod = (ll)(1e9 + 7);
 using namespace std;
@@ -38,6 +37,12 @@ string get_1_random_string(int len = 20) {
 
 long long my_ceil(long long a, long long b) {
     return (a + b - 1) / b;
+}
+
+vector<int> range(int l, int r) {
+    vi ls;
+    frr(l, r, i) ls.pb(i);
+    return ls;
 }
 
 int main() {
