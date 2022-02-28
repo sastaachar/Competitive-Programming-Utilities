@@ -1,82 +1,125 @@
-// ! https://www.spoj.com/problems/KQUERY/
-
 #include <bits/stdc++.h>
-
+#define fr(siz, i) for (int i = 0; i < siz; i++)
+#define frr(a, siz, i) for (int i = a; i < siz; i++)
+#define fe(siz) for (int sasta = 0; sasta < siz; sasta++)
+#define ll long long
+#define pb push_back
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define vi vector<int>
+#define vvi vector<vi>
+#define vl vector<ll>
+#define vvl vector<vl>
+#define ss second
+#define ff first
+// clang-format off
+#define vin(arr,n) fe(n){int x; cin>>x; arr.pb(x);}
+#define vln(arr,n) fe(n){ll x; cin>>x; arr.pb(x);}
+#define pv(arr) fr(arr.size(),i){cout<<arr[i]<<" ";}cout<<"\n";
+// clang-format on
+const int maxn = (int)(2e5 + 5);
+const ll mod = (ll)(1e9 + 7);
 using namespace std;
 
-const int max_n = 30001;
+// ! q - https://www.spoj.com/submit/KQUERY/
+// binarysearch mergesort segmenttree
 
-// tree should be nlogn size
-// nlogn = 450000
-vector<int> tree[450000];
-int data[max_n];
-
-void fillTree(int v, int l, int r) {
-    if (l == r) {
-        tree[v].push_back(data[l]);
-        return;
-    }
-
-    int mid = (l + r) / 2;
-    fillTree(2 * v, l, mid);
-    fillTree(2 * v + 1, mid + 1, r);
+vi merge_nodes(vi &left_node, vi &right_node) {
+    int n = left_node.size(), m = right_node.size();
+    vi final_node;
 
     int i = 0, j = 0;
 
-    while (i < tree[2 * v].size() && j < tree[2 * v + 1].size()) {
-        if (tree[2 * v][i] < tree[2 * v + 1][j])
-            tree[v].push_back(tree[2 * v][i++]);
+    while (i < n && j < m) {
+        if (left_node[i] < right_node[j])
+            final_node.pb(left_node[i++]);
         else
-            tree[v].push_back(tree[2 * v + 1][j++]);
+            final_node.pb(right_node[j++]);
     }
 
-    while (i < tree[2 * v].size()) {
-        tree[v].push_back(tree[2 * v][i++]);
-    }
-    while (j < tree[2 * v + 1].size()) {
-        tree[v].push_back(tree[2 * v + 1][j++]);
-    }
+    if (i != n)
+        while (i != n) final_node.pb(left_node[i++]);
+    if (j != m)
+        while (j != m) final_node.pb(right_node[j++]);
+
+    return final_node;
 }
 
-const int DEF = 0;
+void make_tree(vi &arr, vvi &tree, int cur_i, int cur_l, int cur_r) {
+    if (cur_l == cur_r) {
+        tree[cur_i] = vi(1, arr[cur_l - 1]);
+        return;
+    }
 
-// computation
-int comp(int a, int b) {
-    return a + b;
+    int mid = (cur_l + cur_r) / 2;
+
+    make_tree(arr, tree, 2 * cur_i, cur_l, mid);
+    make_tree(arr, tree, 2 * cur_i + 1, mid + 1, cur_r);
+
+    tree[cur_i] = merge_nodes(tree[2 * cur_i], tree[2 * cur_i + 1]);
 }
 
-int query(int fl, int fr, int k, int v, int l, int r) {
-    if (l > fr || r < fl) {
-        return DEF;
+int bin_srch(vi &arr, int k) {
+    int l = 0, r = arr.size() - 1;
+
+    while (l < r) {
+        int mid = (l + r) / 2;
+        if (arr[mid] == k) return mid;
+
+        if (arr[mid] > k) {
+            r = mid - 1;
+        } else {
+            l = mid + 1;
+        }
     }
 
-    if (l >= fl && r <= fr) {
-        int lower = lower_bound(tree[v].begin(), tree[v].end(), k) - tree[v].begin();
+    if (arr[l] < k) ++l;
+    return l;
+}
 
-        int ans = tree[v].size() - lower;
-        if (ans < 0) ans = 0;
+int count_greater(vi &arr, int k) {
+    int pos = bin_srch(arr, k + 1);
 
-        return ans;
+    if (pos != -1) {
+        return arr.size() - pos;
     }
+    return 0;
+}
 
-    const int mid = (l + r) / 2;
-    const int left = query(fl, fr, k, 2 * v, l, mid);
-    const int right = query(fl, fr, k, 2 * v + 1, mid + 1, r);
-    return left + right;
+int query(int l, int r, int k, vvi &tree, int cur_i, int cur_l, int cur_r) {
+    int total_count = 0;
+    if (l <= cur_l && r >= cur_r) {
+        total_count += count_greater(tree[cur_i], k);
+    } else if ((l >= cur_l && l <= cur_r) || (r >= cur_l && r <= cur_r)) {
+        int mid = (cur_l + cur_r) / 2;
+
+        total_count += query(l, r, k, tree, 2 * cur_i, cur_l, mid);
+        total_count += query(l, r, k, tree, 2 * cur_i + 1, mid + 1, cur_r);
+    }
+    return total_count;
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    vi arr;
+    vin(arr, n);
+    int q;
+    cin >> q;
+
+    vvi tree(4 * n);
+    make_tree(arr, tree, 1, 1, n);
+
+    fr(q, _i) {
+        int i, j, k;
+        cin >> i >> j >> k;
+        cout << query(i, j, k, tree, 1, 1, n) << "\n";
+    }
 }
 
 int main() {
-    int n;
-    cin >> n;
-    for (int i = 0; i < n; i++) cin >> data[i];
-    fillTree(1, 0, n - 1);
-
-    int q;
-    cin >> q;
-    for (int i = 0; i < q; i++) {
-        int l, r, k;
-        cin >> l >> r >> k;
-        // 1 based indexing ,and k+1 for strictly greater than k
-        cout << query(l - 1, r - 1, k + 1, 1, 0, n - 1) << "\n";
-    }
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    solve();
+    return 0;
 }
